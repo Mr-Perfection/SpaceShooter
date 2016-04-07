@@ -28,6 +28,9 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
     private SpaceShooter spaceShooter;
     private GameLoopThread gameLoopThread;
 
+
+
+
     public SpaceView(Context context)
     {
         super(context);
@@ -51,8 +54,7 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         Bitmap myBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         spaceShooter = new SpaceShooter(myBitmap, WIDTH/2, HEIGHT*2/3 );
 
-        // create the game loop thread. Pass SurfaceHolder and this SurfaceView
-        gameLoopThread = new GameLoopThread(this, getHolder());
+
 
 
 
@@ -76,7 +78,9 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         // Launch animator thread .
 //        spaceShooter = new SpaceShooter(getWidth(), getHeight());
         /*Set thread to running*/
-        gameLoopThread.setRunning(true);
+
+        // create the game loop thread. Pass SurfaceHolder and this SurfaceView
+        gameLoopThread = new GameLoopThread(this);
         gameLoopThread.start(); //Game is started
 
 
@@ -95,21 +99,7 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         // tell the thread to shut down and wait for it to finish
         // this is a clean shutdown
         Log.d(Name, "Surface is getting destroyeeddd!");
-        boolean retry = true;
-        while (retry) {
-            try {
-                gameLoopThread.join();
-                retry = false;
-
-            }catch (InterruptedException e) {
-                // try again shutting down the thread
-
-            }//EOF CATCH
-
-
-
-        }// EOF While
-
+        gameLoopThread.interrupt();
         Log.d(Name, "Thread shut down cleanly");
 
     }//EOF SurfaceDestroyed
@@ -122,6 +112,8 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
     public boolean onTouchEvent(MotionEvent event)
     {
 
+
+
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
             //IF TOUCH WAS INITIATED
             //Delegate event handling to the spaceshooter
@@ -129,7 +121,7 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
 
             // check if in the lower part of the screen we exit
             if (event.getY() > getHeight() - 50) {
-                gameLoopThread.setRunning(false);//stop rendering the screen.
+                gameLoopThread.interrupt();//stop rendering the screen.
                 ((Activity) getContext()).finish();
 
             } else {
@@ -161,16 +153,23 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         return true;
     }
 
-    @Override
-    protected void onDraw(Canvas canvas)
 
-    {
+    public void draw(Canvas c) {
 
-        canvas.drawColor(Color.BLACK);
-        spaceShooter.draw(canvas);
-
-
+        c.drawColor(Color.BLACK);
+        spaceShooter.draw(c);
     }
+
+//    @Override
+//    protected void onDraw(Canvas canvas)
+//
+//    {
+//
+//        canvas.drawColor(Color.BLACK);
+//        spaceShooter.draw(canvas);
+//
+//
+//    }
 
 
 } //EOF CLASS

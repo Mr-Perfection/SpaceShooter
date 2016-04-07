@@ -16,38 +16,40 @@ public class GameLoopThread extends Thread {
     // The actual view that handles inputs and draws to the surface
     private SpaceView spaceView;
     // Surface holder that can access the physical surface
-    private SurfaceHolder surfaceHolder;
 
 
-    // flag to hold game state
-    private boolean running;
-    //SET running flag
-    public void setRunning(boolean _running) {
-        running = _running;
-    }
+//    // flag to hold game state
+//    private boolean running;
+//    //SET running flag
+//    public void setRunning(boolean _running) {
+//        running = _running;
+//    }
     //SET surfaceHolder and spaceView
-    public GameLoopThread(SpaceView _spaceView, SurfaceHolder _surfaceHolder) {
-        super();
+    public GameLoopThread(SpaceView _spaceView) {
 
         spaceView = _spaceView;
-        surfaceHolder = _surfaceHolder;
     }
 
 
     @Override
     public void run() {
-        Canvas canvas;
+
+        //Get spaceview surfaceholder
+        SurfaceHolder surfaceHolder = spaceView.getHolder();
+
+
+
         Log.d(Name, "Starting game loop");
 
         // Main game loop.
-        while (running) {
-            canvas = null;
-//You might want to do game specific processing in a method you call here
+        while ( !Thread.interrupted()) {
 
+//You might want to do game specific processing in a method you call here
+            Canvas canvas = surfaceHolder.lockCanvas(null);
             try {
-                canvas = surfaceHolder.lockCanvas();
+
                 synchronized (surfaceHolder) {
-                    spaceView.onDraw(canvas);
+                    spaceView.draw(canvas);
                 }
             } catch (Exception e) {} finally {
                 if (canvas != null) {
@@ -61,7 +63,7 @@ public class GameLoopThread extends Thread {
 // Thread was interrupted while sleeping.
                 return;
             }
-        }
-    }
+        } //While
+    }//Run
 }
 
