@@ -33,7 +33,8 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         super(context);
 
         //Add callback to the surfaceholder to intercept the events
-        // Notify the SurfaceHolder that you’d like to receive // SurfaceHolder callbacks .
+        // Notify the SurfaceHolder that you’d like to receive
+        // SurfaceHolder callbacks .
         getHolder().addCallback(this);
 
 
