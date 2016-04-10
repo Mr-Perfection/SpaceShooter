@@ -26,8 +26,10 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
     private static final String Name = SpaceView.class.getSimpleName();
 
     private SpaceShooter spaceShooter;
+    private Alien alien;
     private GameLoopThread gameLoopThread;
 
+    int HEIGHT,WIDTH;
 
 
 
@@ -40,35 +42,9 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         // SurfaceHolder callbacks .
         getHolder().addCallback(this);
 
-
-
-        //Get device height and width
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        ((Activity) getContext()).getWindowManager()
-                .getDefaultDisplay()
-                .getMetrics(displaymetrics);
-        int HEIGHT = displaymetrics.heightPixels;
-        int WIDTH = displaymetrics.widthPixels;
-
-        //get the bitmap and create spaceshooter
-        Bitmap myBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-        spaceShooter = new SpaceShooter(myBitmap, WIDTH/2, HEIGHT*2/3 );
-
-
-
-
-
         // make the SpaceView focusable so it can handle events
         setFocusable(true);
     }
-
-//    Bitmap myBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-
-//    private static final int MoveSpeed = -5;
-
-
-//    private int x = 0;
-
 
 
 
@@ -78,7 +54,13 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         // Launch animator thread .
 //        spaceShooter = new SpaceShooter(getWidth(), getHeight());
         /*Set thread to running*/
+        WIDTH = getWidth();
+        HEIGHT = getHeight();
 
+        Bitmap myBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        spaceShooter = new SpaceShooter(myBitmap, WIDTH, HEIGHT );
+        alien = new Alien(myBitmap, getWidth(), getHeight() );  //Use get methods to get screen size.
+        alien.setVelocity(10.0f, 35.0f); //Velociry for x and y.
         // create the game loop thread. Pass SurfaceHolder and this SurfaceView
         gameLoopThread = new GameLoopThread(this);
         gameLoopThread.start(); //Game is started
@@ -158,7 +140,11 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
 
         c.drawColor(Color.BLACK);
         spaceShooter.draw(c);
+        alien.draw(c);
+        alien.update();
     }
+
+
 
 //    @Override
 //    protected void onDraw(Canvas canvas)
