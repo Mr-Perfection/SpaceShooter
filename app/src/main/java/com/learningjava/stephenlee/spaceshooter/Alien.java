@@ -23,10 +23,16 @@ public class Alien {
         bitmap = _bitmap;
         width = _width;
         height = _height;
-        x = _width / 5;
-        y = _height / 6;
+//        x = _width / 5;
+//        y = _height / 6;
 
     }//EOF Alien
+
+    void setPosition(int _x, int _y)
+    {
+        x = _x;
+        y = _y;
+    }
 
     void setVelocity(float velocity_x, float velocity_y)
     {
@@ -71,15 +77,7 @@ public class Alien {
                 cFlag = 0; //now the alien moves up
         }
 
-//        if(count%2 == 0)
-//        {
-//            y = y + 5f;
 //
-//        }
-//        else
-//        {
-//            y = y - 20f;
-//        }
         x=x+vx;
 
         if (x>width&& vx>0)

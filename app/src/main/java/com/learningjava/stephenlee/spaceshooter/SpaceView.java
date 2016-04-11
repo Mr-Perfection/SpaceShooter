@@ -59,8 +59,10 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
 
         Bitmap myBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         spaceShooter = new SpaceShooter(myBitmap, WIDTH, HEIGHT );
+
         alien = new Alien(myBitmap, getWidth(), getHeight() );  //Use get methods to get screen size.
         alien.setVelocity(10.0f, 35.0f); //Velociry for x and y.
+        alien.setPosition(100, 100);
         // create the game loop thread. Pass SurfaceHolder and this SurfaceView
         gameLoopThread = new GameLoopThread(this);
         gameLoopThread.start(); //Game is started
@@ -132,6 +134,8 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
 
 
 
+
+
         return true;
     }
 
@@ -145,17 +149,19 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
     }
 
 
-
-//    @Override
-//    protected void onDraw(Canvas canvas)
-//
-//    {
-//
-//        canvas.drawColor(Color.BLACK);
-//        spaceShooter.draw(canvas);
-//
-//
-//    }
+    void alienArmy(Bitmap myBitmap, int numOfAliens, float velocityX, float velocityY, float padding)
+    {
+        int i;
+        Alien[] alienArmy = new Alien[];
+        for (i = 0; i < numOfAliens; ++i)
+        {
+            alienArmy[i] = new Alien(myBitmap, getWidth(), getHeight() );
+            alienArmy[i].setPosition();
+        }
+        alien = new Alien(myBitmap, getWidth(), getHeight() );  //Use get methods to get screen size.
+        alien.setVelocity(10.0f, 35.0f); //Velociry for x and y.
+        alien.setPosition(100, 100);
+    }
 
 
 } //EOF CLASS
