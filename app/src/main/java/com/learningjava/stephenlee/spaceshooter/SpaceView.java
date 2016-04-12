@@ -26,12 +26,16 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
     private static final String Name = SpaceView.class.getSimpleName();
 
     private SpaceShooter spaceShooter;
-    private Alien alien;
+//    private Alien alien;
+    private Alien[][] aliens;
+//    private boolean aliensFlag = false; //True if aliens are ready to be drawn
+
     private GameLoopThread gameLoopThread;
 
+
     int HEIGHT,WIDTH;
-
-
+    private int row  , column, paddingX, paddingY;
+    private float velocityX, velocityY;
 
     public SpaceView(Context context)
     {
@@ -60,12 +64,31 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         Bitmap myBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         spaceShooter = new SpaceShooter(myBitmap, WIDTH, HEIGHT );
 
-        alien = new Alien(myBitmap, getWidth(), getHeight() );  //Use get methods to get screen size.
-        alien.setVelocity(10.0f, 35.0f); //Velociry for x and y.
-        alien.setPosition(100, 100);
+        /*CREATE ALIEN ARMY*/
+        row = 4;
+        column = 5;
+        velocityX = 20f;
+        velocityY = 50f;
+        paddingX = 200;
+        paddingY = 150;
+
+        aliens = new Alien[row][column];
+//        aliens[1][1] =  new Alien(myBitmap, WIDTH, HEIGHT );
+
+//        for (int i = 0; i < row; ++i)
+//        {
+//            for (int j = 0; j< column; ++j){
+//                aliens[i][j] =  new Alien(myBitmap, WIDTH, HEIGHT );
+//            }
+//        }
+
+        alienArmy(myBitmap, WIDTH, HEIGHT,row, column, velocityX, velocityY, paddingX, paddingY);
+
+
         // create the game loop thread. Pass SurfaceHolder and this SurfaceView
         gameLoopThread = new GameLoopThread(this);
         gameLoopThread.start(); //Game is started
+
 
 
     }
@@ -144,24 +167,43 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
 
         c.drawColor(Color.BLACK);
         spaceShooter.draw(c);
-        alien.draw(c);
-        alien.update();
-    }
 
+        int i, j;
 
-    void alienArmy(Bitmap myBitmap, int numOfAliens, float velocityX, float velocityY, float padding)
-    {
-        int i;
-        Alien[] alienArmy = new Alien[];
-        for (i = 0; i < numOfAliens; ++i)
-        {
-            alienArmy[i] = new Alien(myBitmap, getWidth(), getHeight() );
-            alienArmy[i].setPosition();
+        for (i = 0; i < row; ++i) {
+            for (j = 0; j < column; ++j) {
+                aliens[i][j].draw(c);
+                aliens[i][j].update();
+            }
         }
-        alien = new Alien(myBitmap, getWidth(), getHeight() );  //Use get methods to get screen size.
-        alien.setVelocity(10.0f, 35.0f); //Velociry for x and y.
-        alien.setPosition(100, 100);
+
     }
+
+
+
+
+    void alienArmy(Bitmap myBitmap, int _width ,int _height,int _row, int _column, float velocityX, float velocityY, int paddingX, int paddingY)
+    {
+        int i, j;
+
+        for (i = 0; i < _row; ++i)
+
+        {
+            for (j = 0; j < _column; ++j)
+            {
+
+                Log.d(Name, "Alien Army" +i + " " + j + "created!");
+                aliens[i][j] =  new Alien(myBitmap,_width, _height );
+                aliens[i][j].setPosition(getWidth() / 4 + paddingX * i, getHeight()/5 + paddingY*j);     //Rectangular form of army of aliens with
+                                                                                                    //paddings
+                aliens[i][j].setVelocity(velocityX,velocityY);   //Set velocity
+
+            }
+        }
+
+
+
+    }//EOF alienArmy
 
 
 } //EOF CLASS
