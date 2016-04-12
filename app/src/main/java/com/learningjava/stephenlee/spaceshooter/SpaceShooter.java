@@ -11,19 +11,24 @@ import android.util.Log;
  */
 public class SpaceShooter
 {
+
+    private int width, height;  //Screen size
     private Bitmap bitmap; // the actual bitmap
     private int x;   // the X coordinate
     private int y;   // the Y coordinate
     private boolean touched; // if spaceshooter is touched/picked up
 
     /*Set SpaceShooter (bitmap, x, y)*/
-    public SpaceShooter(Bitmap _bitmap, int _x, int _y)
+    public SpaceShooter(Bitmap _bitmap, int _width, int _height)
     {
         bitmap = _bitmap;
-        x = _x;
-        y = _y;
+        width = _width;
+        height = _height;
+        x = _width / 2;
+        y = _height * 2/3;
 
     }
+
 
     //Get bitmap
     public Bitmap getBitmap()
@@ -70,7 +75,7 @@ public class SpaceShooter
         touched = _touched;
     }
 
-    public void draw(Canvas canvas) {
+    void draw(Canvas canvas) {
 
         canvas.drawBitmap(bitmap, x - (bitmap.getWidth() / 2), y - (bitmap.getHeight() / 2), null);
 
