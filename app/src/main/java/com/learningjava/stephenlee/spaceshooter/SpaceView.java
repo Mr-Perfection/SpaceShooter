@@ -15,6 +15,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by StephenLee on 4/5/16.
@@ -24,13 +26,23 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
 {
 //ll
     private static final String Name = SpaceView.class.getSimpleName();
-    int num = 0;
+
     private SpaceShooter spaceShooter;
     private Alien[][] aliens;
 //    private boolean aliensFlag = false; //True if aliens are ready to be drawn
 
     private GameLoopThread gameLoopThread;
+    //current bullet
+    Bullet curr_bullet;
 
+    //initializing arraylist for bulletList
+    ArrayList<Bullet> bulletList = new ArrayList<Bullet>();
+
+    //bullet
+    private Bullet b;
+
+    //press down for detecting player
+    private static Boolean FristBullet;
 
     int HEIGHT,WIDTH;
     private int row  , column, paddingX, paddingY;
@@ -44,7 +56,10 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         // Notify the SurfaceHolder that you’d like to receive
         // SurfaceHolder callbacks .
         getHolder().addCallback(this);
-
+    // initialize the first bullet and add to bulletList
+        Bullet bullet_tmp = new Bullet(spaceShooter.getX(), spaceShooter.getY());
+        curr_bullet = bullet_tmp;
+        bulletList.add(curr_bullet);
         // make the SpaceView focusable so it can handle events
         setFocusable(true);
     }
@@ -151,6 +166,8 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
             // touch was released
             if (spaceShooter.isTouched()) {
                 spaceShooter.setTouched(false);
+                // release the bullet
+                curr_bullet.setBulletReleased();
             }
         }//EOF if UP
 
@@ -174,9 +191,37 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
                 aliens[i][j].draw(c);
                 aliens[i][j].update();
             }
-        }
+        } //rof
+        //if bullet is released, get a reload a new bullet
+        if(curr_bullet.isBulletReleased()){
+            Bullet bullet_tmp = new Bullet(spaceShooter.getX(), spaceShooter.getY());
 
-    }
+            //set that as current bullet
+            curr_bullet = bullet_tmp;
+            bulletList.add(curr_bullet);
+        }
+        //Looping through all the bullets in bulletList
+        for(int a=0; a < bulletList.size(); a++){
+
+            //changing y pos of bullet if bullet is released
+            if(bulletList.get(a).isBulletReleased()){
+                bulletList.get(a).moveBullet();
+            }
+            // else the bullet should follow the spaceShooter
+            else{
+                bulletList.get(a).setX(spaceShooter.getX());
+                bulletList.get(a).setY(spaceShooter.getY());
+            }
+
+            //draw the bullet
+            bulletList.get(a).draw(c);
+            //remove the bullets that are out of the screen
+            if(bulletList.get(a).getY() < 0){
+                bulletList.remove(a);
+            } //fi
+        } //rof
+
+    } //eof draw
 
 
 

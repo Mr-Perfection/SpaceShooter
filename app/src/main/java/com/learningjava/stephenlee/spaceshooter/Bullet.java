@@ -11,8 +11,9 @@ import android.graphics.Paint;
 //testing
 public class Bullet {
 
-    public float x;
-    public float y;
+    //have fields in private
+    private float x;
+    private float y;
 
     private boolean touched;
     private boolean released = false;
@@ -25,7 +26,7 @@ public class Bullet {
 
 
     }
-
+    //have methods in public
     public float getX() {
         return x;
     }

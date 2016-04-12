@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
    // protected SpaceShooter spaceShooter;
     //protected SpaceView spaceView;
    // protected GameLoopThread gameLoopThread;
-    protected Bullet b;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
