@@ -8,6 +8,7 @@ import android.graphics.Paint;
 /**
  * Created by Elisa on 4/8/2016.
  */
+//testing
 public class Bullet {
 
     public float x;

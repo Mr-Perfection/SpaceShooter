@@ -22,9 +22,9 @@ import android.view.SurfaceView;
 
 public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
 {
-
+//ll
     private static final String Name = SpaceView.class.getSimpleName();
-
+    int num = 0;
     private SpaceShooter spaceShooter;
     private Alien[][] aliens;
 //    private boolean aliensFlag = false; //True if aliens are ready to be drawn
