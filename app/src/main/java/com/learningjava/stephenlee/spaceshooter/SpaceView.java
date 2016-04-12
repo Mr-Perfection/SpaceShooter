@@ -56,10 +56,7 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         // Notify the SurfaceHolder that you’d like to receive
         // SurfaceHolder callbacks .
         getHolder().addCallback(this);
-    // initialize the first bullet and add to bulletList
-        Bullet bullet_tmp = new Bullet(spaceShooter.getX(), spaceShooter.getY());
-        curr_bullet = bullet_tmp;
-        bulletList.add(curr_bullet);
+
         // make the SpaceView focusable so it can handle events
         setFocusable(true);
     }
@@ -77,7 +74,10 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
 
         Bitmap myBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         spaceShooter = new SpaceShooter(myBitmap, WIDTH, HEIGHT );
-
+    // initialize the first bullet and add to bulletList
+        Bullet bullet_tmp = new Bullet(spaceShooter.getX(), spaceShooter.getY());
+        curr_bullet = bullet_tmp;
+        bulletList.add(curr_bullet);
         /*CREATE ALIEN ARMY*/
         row = 4;
         column = 5;
