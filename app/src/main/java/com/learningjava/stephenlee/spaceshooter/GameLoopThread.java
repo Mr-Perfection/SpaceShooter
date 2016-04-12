@@ -17,7 +17,8 @@ public class GameLoopThread extends Thread {
     private SpaceView spaceView;
     // Surface holder that can access the physical surface
 
-
+    //bullet
+    private Bullet b;
 //    // flag to hold game state
 //    private boolean running;
 //    //SET running flag
@@ -28,6 +29,7 @@ public class GameLoopThread extends Thread {
     public GameLoopThread(SpaceView _spaceView) {
 
         spaceView = _spaceView;
+        
     }
 
 
@@ -44,24 +46,30 @@ public class GameLoopThread extends Thread {
         // Main game loop.
         while ( !Thread.interrupted()) {
 
-//You might want to do game specific processing in a method you call here
             Canvas canvas = surfaceHolder.lockCanvas(null);
-            try {
 
+            try {
+//                System.out.println("intry");
                 synchronized (surfaceHolder) {
-                    spaceView.draw(canvas);
+                    spaceView.draw(canvas); //drawing frame
+                    
+                 
                 }
             } catch (Exception e) {} finally {
                 if (canvas != null) {
+//                    System.out.println("inif");
                     surfaceHolder.unlockCanvasAndPost(canvas);
                 }
             }
 // Set the frame rate by setting this delay
             try {
+
                 Thread.sleep(1);
             } catch (InterruptedException e) {
 // Thread was interrupted while sleeping.
+//                System.out.println("b4return");
                 return;
+
             }
         } //While
     }//Run
