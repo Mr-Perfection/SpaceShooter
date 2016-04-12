@@ -26,7 +26,6 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
     private static final String Name = SpaceView.class.getSimpleName();
 
     private SpaceShooter spaceShooter;
-    //    private Alien alien;
     private Alien[][] aliens;
 //    private boolean aliensFlag = false; //True if aliens are ready to be drawn
 
