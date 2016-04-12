@@ -73,6 +73,7 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         HEIGHT = getHeight();
 
         Bitmap myBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        Bitmap alienBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.donald);
         spaceShooter = new SpaceShooter(myBitmap, WIDTH, HEIGHT );
     // initialize the first bullet and add to bulletList
         Bullet bullet_tmp = new Bullet(spaceShooter.getX(), spaceShooter.getY());
@@ -96,7 +97,7 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
 //            }
 //        }
 
-        alienArmy(myBitmap, WIDTH, HEIGHT,row, column, velocityX, velocityY, paddingX, paddingY);
+        alienArmy(alienBitmap, WIDTH, HEIGHT,row, column, velocityX, velocityY, paddingX, paddingY);
 
 
         // create the game loop thread. Pass SurfaceHolder and this SurfaceView
