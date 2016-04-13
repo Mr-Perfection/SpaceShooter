@@ -25,7 +25,7 @@ public class SpaceShooter
         width = _width;
         height = _height;
         x = _width / 2;
-        y = _height * 2/3;
+        y = _height * 3/4;
 
     }
 

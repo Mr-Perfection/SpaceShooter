@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 
 /**
  * Created by Elisa on 4/8/2016.
@@ -17,6 +18,7 @@ public class Bullet {
 
     private boolean touched;
     private boolean released = false;
+    private RectF   rect;   //Use this for collision detection
 
 
     public Bullet(int screenWidth, int screenHeight) {
@@ -44,6 +46,7 @@ public class Bullet {
     }
 
 
+
     public boolean isTouched() {
         return touched;
     }
@@ -53,8 +56,10 @@ public class Bullet {
     }
 
      // function to move bullet up
-    public void moveBullet() {
+    public void moveBullet()
+    {
         y = y - 90;
+
     }
 
 

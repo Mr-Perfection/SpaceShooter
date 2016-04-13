@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -31,7 +32,8 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
 
     private SpaceShooter spaceShooter;
     private Alien[][] aliens;
-//    private boolean aliensFlag = false; //True if aliens are ready to be drawn
+    Bitmap alienBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.donald);
+    private int countDeadAliens = 0;
 
     private GameLoopThread gameLoopThread;
     //current bullet
@@ -75,7 +77,7 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         HEIGHT = getHeight();
 
         Bitmap myBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-        Bitmap alienBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.donald);
+
         spaceShooter = new SpaceShooter(myBitmap, WIDTH, HEIGHT );
         // initialize the first bullet and add to bulletList
         Bullet bullet_tmp = new Bullet(spaceShooter.getX(), spaceShooter.getY());
@@ -149,7 +151,7 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
                 ((Activity) getContext()).finish();
 
             } else {
-                Log.d(Name, "Touch Coords: x=" + event.getX() + ",y=" + event.getY());
+//                Log.d(Name, "Touch Coords: x=" + event.getX() + ",y=" + event.getY());
             }
         } //End of DOWN
         if (event.getAction() == MotionEvent.ACTION_MOVE) {
@@ -195,8 +197,45 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
                     aliens[i][j].draw(c);
                     aliens[i][j].update();
                 }
+
+                //If the last alien was invisible. All the aliens will be visible
+                if(aliens[i][j].getPositionY() >= HEIGHT + 100 )
+                {
+
+                    aliens[i][j].setVisibility(false);
+
+                    countDeadAliens++;
+
+
+
+
+
+                }//EOF If aliens
+
+
+
             }
-        } //rof
+
+
+        } //EOF For loops
+
+
+
+
+
+        //If all aliens are dead, do this.
+
+        if(countDeadAliens == row * column)
+        {
+            velocityX = velocityX + 10;
+            velocityY = velocityY + 10;
+            alienArmy(alienBitmap, WIDTH, HEIGHT,row, column, velocityX, velocityY, paddingX, paddingY);
+            countDeadAliens = 0;    //Initialize to 0. Restart
+        }
+
+
+
+
         //if bullet is released, get a reload a new bullet
         if(curr_bullet.isBulletReleased()){
             Bullet bullet_tmp = new Bullet(spaceShooter.getX(), spaceShooter.getY());
@@ -204,6 +243,9 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
             //set that as current bullet
             curr_bullet = bullet_tmp;
             bulletList.add(curr_bullet);
+
+
+
         }
         //Looping through all the bullets in bulletList
         for(int a=0; a < bulletList.size(); a++){
@@ -211,11 +253,41 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
             //changing y pos of bullet if bullet is released
             if(bulletList.get(a).isBulletReleased()){
                 bulletList.get(a).moveBullet();
+
+
+                for (i = 0; i < row; ++i) {
+                    for (j = 0; j < column; ++j) {
+                        if(aliens[i][j].getVisibility() == true)
+                        {
+                            float bullet_X = bulletList.get(a).getX();
+                            float bullet_Y = bulletList.get(a).getY();
+                            float alien_X =  aliens[i][j].getPositionX();
+                            float alien_Y =aliens[i][j].getPositionY();
+
+                            float difference_X = Math.abs(alien_X - bullet_X);
+                            float difference_Y = Math.abs(alien_Y - bullet_Y);
+
+
+                            if(difference_X < 50  && difference_Y < 50){
+                                //Set the collision detection rect
+
+                                Log.d(Name, "Collsiton detected");
+                                aliens[i][j].setVisibility(false);
+                                countDeadAliens++;
+                            }
+                        }
+
+                    }
+                }
+
+
             }
             // else the bullet should follow the spaceShooter
-            else{
+            else {
                 bulletList.get(a).setX(spaceShooter.getX());
                 bulletList.get(a).setY(spaceShooter.getY());
+
+
             }
 
             //draw the bullet
@@ -224,6 +296,7 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
             if(bulletList.get(a).getY() < 0){
                 bulletList.remove(a);
             } //fi
+
         } //rof
 
     } //eof draw
@@ -243,10 +316,13 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
 
                 Log.d(Name, "Alien Army" +i + " " + j + "created!");
                 aliens[i][j] =  new Alien(myBitmap,_width, _height );
-                aliens[i][j].setPosition(getWidth() / 4 + paddingX * i, getHeight() / 5 + paddingY*j);     //Rectangular form of army of aliens with
+                aliens[i][j].setPosition(getWidth() / 4 + paddingX * i, getHeight() / 5 + paddingY * j);     //Rectangular form of army of aliens with
                 //paddings
-                aliens[i][j].setVelocity(velocityX,velocityY);   //Set velocity
+                aliens[i][j].setVelocity(velocityX, velocityY);   //Set velocity
+                aliens[i][j].setVisibility(true);
 
+
+//                aliens[i][j].setRect((alienBitmap.getWidth()),(alienBitmap.getHeight()));  //Set the collision rect
             }
         }
 

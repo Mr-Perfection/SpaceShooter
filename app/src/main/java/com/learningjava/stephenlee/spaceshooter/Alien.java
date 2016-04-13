@@ -2,6 +2,7 @@ package com.learningjava.stephenlee.spaceshooter;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.RectF;
 import android.util.Log;
 
 /**
@@ -17,6 +18,8 @@ public class Alien {
     private int count;
     private int cFlag = 0;  //0: goes down, 1: goes up
 
+    private RectF   rect;   //Use this for collision detection
+
     float vx,vy;   // velocity x y
     private boolean isVisible = true; //invisibility flag (when bullet hits the enemy, it becomes invisible)
     //Alien bitmap
@@ -25,6 +28,12 @@ public class Alien {
         bitmap = _bitmap;
         width = _width;
         height = _height;
+
+//
+//        rect.top = y;
+//        rect.bottom = y + height;
+//        rect.left = x;
+//        rect.right = x + _width;
 
 //        x = _width / 5;
 //        y = _height / 6;
@@ -48,6 +57,21 @@ public class Alien {
 
 
 
+
+    public void setRect(float length, float height)   //Set the rectangle for collision detection
+    {
+        rect.top = y;
+        rect.bottom = y + height;
+        rect.left = x;
+        rect.right = x + length;
+    }
+
+    public RectF getRect()
+    {
+        return  rect;
+    }
+
+
     void setVelocity(float velocity_x, float velocity_y)
     {
         vx = velocity_x;
@@ -55,7 +79,7 @@ public class Alien {
         Log.d(Name, "VELOCITY IS" + vx + "   " + vy);
     }
 
-    public void setInvisible(boolean _isVisible)
+    public void setVisibility(boolean _isVisible)
     {
         isVisible = _isVisible; //set it to false when hit by bullet
 
@@ -73,6 +97,7 @@ public class Alien {
 
         canvas.drawBitmap(bitmap, x - (bitmap.getWidth() / 2), y - (bitmap.getHeight() / 2), null);
 
+//        canvas.drawRect(rect, null);
     }
 
 
@@ -128,7 +153,11 @@ public class Alien {
         else
             isVisible = true;
 
-
+        // Update rect which is used to detect hits
+//        rect.top = y;
+//        rect.bottom = y + bitmap.getHeight();
+//        rect.left = x;
+//        rect.right = x + bitmap.getWidth();
 
     }
 
