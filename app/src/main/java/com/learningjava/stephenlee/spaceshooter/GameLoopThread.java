@@ -51,6 +51,7 @@ public class GameLoopThread extends Thread {
             try {
 //                System.out.println("intry");
                 synchronized (surfaceHolder) {
+
                     spaceView.draw(canvas); //drawing frame
                     
                  

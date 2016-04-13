@@ -16,6 +16,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -24,7 +26,7 @@ import java.util.ArrayList;
 
 public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
 {
-//ll
+    //ll
     private static final String Name = SpaceView.class.getSimpleName();
 
     private SpaceShooter spaceShooter;
@@ -75,7 +77,7 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         Bitmap myBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         Bitmap alienBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.donald);
         spaceShooter = new SpaceShooter(myBitmap, WIDTH, HEIGHT );
-    // initialize the first bullet and add to bulletList
+        // initialize the first bullet and add to bulletList
         Bullet bullet_tmp = new Bullet(spaceShooter.getX(), spaceShooter.getY());
         curr_bullet = bullet_tmp;
         bulletList.add(curr_bullet);
@@ -189,8 +191,10 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
 
         for (i = 0; i < row; ++i) {
             for (j = 0; j < column; ++j) {
-                aliens[i][j].draw(c);
-                aliens[i][j].update();
+                if(aliens[i][j].getVisibility() == true) {
+                    aliens[i][j].draw(c);
+                    aliens[i][j].update();
+                }
             }
         } //rof
         //if bullet is released, get a reload a new bullet
@@ -239,7 +243,7 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
 
                 Log.d(Name, "Alien Army" +i + " " + j + "created!");
                 aliens[i][j] =  new Alien(myBitmap,_width, _height );
-                aliens[i][j].setPosition(getWidth() / 4 + paddingX * i, getHeight()/5 + paddingY*j);     //Rectangular form of army of aliens with
+                aliens[i][j].setPosition(getWidth() / 4 + paddingX * i, getHeight() / 5 + paddingY*j);     //Rectangular form of army of aliens with
                 //paddings
                 aliens[i][j].setVelocity(velocityX,velocityY);   //Set velocity
 
