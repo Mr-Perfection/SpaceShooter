@@ -4,6 +4,8 @@ import android.graphics.Canvas;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
+import java.util.Random;
+
 /**
  * Created by StephenLee on 4/5/16.
  */
@@ -51,7 +53,11 @@ public class GameLoopThread extends Thread {
             try {
 //                System.out.println("intry");
                 synchronized (surfaceHolder) {
-
+                    if(spaceView.isShipDestroyed == true){
+                        Random rand = new Random();
+                        spaceView.mysteryshipflag = rand.nextInt(50); //generate number from 0 to 49
+                        System.out.println("what's the random generated number" +spaceView.mysteryshipflag);
+                    }
                     spaceView.draw(canvas); //drawing frame
                     
                  

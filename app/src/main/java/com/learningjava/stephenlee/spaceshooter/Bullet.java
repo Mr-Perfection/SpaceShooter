@@ -73,7 +73,7 @@ public class Bullet {
 
     //draw bullet
     public void draw(Canvas canvas) {
-        System.out.println("in b.draw");
+//        System.out.println("in b.draw");
         Paint p = new Paint();
         p.setColor(Color.RED);
 

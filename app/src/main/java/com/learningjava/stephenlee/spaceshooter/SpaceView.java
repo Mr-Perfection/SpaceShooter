@@ -32,7 +32,9 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
 
     private SpaceShooter spaceShooter;
     private Alien[][] aliens;
-    Bitmap alienBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.donald);
+    //testing with ic_launcher first
+    Bitmap alienBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+    //Bitmap alienBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.donald);
     private int countDeadAliens = 0;
 
     private GameLoopThread gameLoopThread;
@@ -51,7 +53,14 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
     int HEIGHT,WIDTH;
     private int row  , column, paddingX, paddingY;
     private float velocityX, velocityY;
-
+    //for mystery ship
+    private MysteryShip mysteryShip;
+    //to store the random number that was generated from rand
+    int mysteryshipflag;
+    //to check if the mysteryship is out of the page(destroyed)
+    //true: yes, destroyed
+    //false: not destroyed
+    boolean isShipDestroyed = true;
     public SpaceView(Context context)
     {
         super(context);
@@ -83,6 +92,11 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         Bullet bullet_tmp = new Bullet(spaceShooter.getX(), spaceShooter.getY());
         curr_bullet = bullet_tmp;
         bulletList.add(curr_bullet);
+        //initialize the first mysteryship and add to mysteryshipList
+//        MysteryShip mysteryShip_tmp = new MysteryShip(90, 100);
+//        curr_mysteryship = mysteryShip_tmp;
+//        mysteryShipsList.add(curr_mysteryship);
+        mysteryShip = new MysteryShip(10,10);
         /*CREATE ALIEN ARMY*/
         row = 4;
         column = 5;
@@ -295,9 +309,45 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
             //remove the bullets that are out of the screen
             if(bulletList.get(a).getY() < 0){
                 bulletList.remove(a);
+                a--;
             } //fi
 
         } //rof
+        //drawing mystery ship conditions
+        //rand will generate number from 0 to 49 so 50% chance will go in to if statement
+        System.out.println("flag less than 20??" + mysteryshipflag);
+        mysteryShip.setDestroyed();
+       //System.out.println("new destroy?" + mysteryShip.Destroyed());
+        while (mysteryshipflag <= 3) {
+          //  System.out.println("what's mystershipflag number?" + mysteryshipflag);
+
+
+            if (mysteryShip.Destroyed()) {
+//                mysteryShip.draw(c);
+             //   System.out.println("pass through if destroy to be true");
+
+                mysteryShip.moveShip();
+
+            }
+
+            mysteryShip.draw(c);
+
+//            System.out.println("x of mship" + mysteryShip.getX());
+//            System.out.println("y of mship" + mysteryShip.getY());
+
+            if (mysteryShip.getX() > c.getWidth()) {
+                System.out.println("what's c.getWidth? suppose to be the max of screen" + c.getWidth());
+                mysteryShip.setDDestroyed();
+                mysteryshipflag = 4;
+                //mysteryShip.setDestroyed();
+//                System.out.println("is ship remove? setDDestroyed" + mysteryShip.Destroyed());
+
+            } //fi
+
+        }
+        mysteryShip.setX(10);
+        mysteryShip.setY(10);
+
 
     } //eof draw
 
