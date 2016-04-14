@@ -33,8 +33,8 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
     private SpaceShooter spaceShooter;
     private Alien[][] aliens;
     //testing with ic_launcher first
-    Bitmap alienBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-    //Bitmap alienBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.donald);
+//    Bitmap alienBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+    Bitmap alienBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.donald);
     private int countDeadAliens = 0;
 
     private GameLoopThread gameLoopThread;
@@ -50,7 +50,7 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
     //press down for detecting player
     private static Boolean FristBullet;
 
-    int HEIGHT,WIDTH;
+    private static int HEIGHT,WIDTH;
     private int row  , column, paddingX, paddingY;
     private float velocityX, velocityY;
     //for mystery ship
@@ -85,7 +85,7 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         WIDTH = getWidth();
         HEIGHT = getHeight();
 
-        Bitmap myBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        Bitmap myBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.hilary);
 
         spaceShooter = new SpaceShooter(myBitmap, WIDTH, HEIGHT );
         // initialize the first bullet and add to bulletList
@@ -106,16 +106,9 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         paddingY = 150;
 
         aliens = new Alien[row][column];
-//        aliens[1][1] =  new Alien(myBitmap, WIDTH, HEIGHT );
 
-//        for (int i = 0; i < row; ++i)
-//        {
-//            for (int j = 0; j< column; ++j){
-//                aliens[i][j] =  new Alien(myBitmap, WIDTH, HEIGHT );
-//            }
-//        }
 
-        alienArmy(alienBitmap, WIDTH, HEIGHT,row, column, velocityX, velocityY, paddingX, paddingY);
+        alienArmy(alienBitmap, WIDTH, HEIGHT,row, column, velocityX, velocityY, paddingX, paddingY);    //Make first array of aliens
 
 
         // create the game loop thread. Pass SurfaceHolder and this SurfaceView
@@ -200,42 +193,148 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
 
     public void draw(Canvas c) {
 
-        c.drawColor(Color.BLACK);
-        spaceShooter.draw(c);
 
         int i, j;
+        c.drawColor(Color.BLACK);
 
-        for (i = 0; i < row; ++i) {
-            for (j = 0; j < column; ++j) {
-                if(aliens[i][j].getVisibility() == true) {
-                    aliens[i][j].draw(c);
-                    aliens[i][j].update();
+        if(spaceShooter.getVisibility()) {
+            spaceShooter.draw(c);
+
+            //if bullet is released, get a reload a new bullet
+            if(curr_bullet.isBulletReleased()){
+                Bullet bullet_tmp = new Bullet(spaceShooter.getX(), spaceShooter.getY());
+
+                //set that as current bullet
+                curr_bullet = bullet_tmp;
+                bulletList.add(curr_bullet);
+            }//EOF currbullet
+
+            for (i = 0; i < row; ++i) {
+                for (j = 0; j < column; ++j) {
+                    if(aliens[i][j].getVisibility()) {
+                        aliens[i][j].draw(c);
+                        aliens[i][j].update();
+
+                        float alien_X = aliens[i][j].getPositionX();
+                        float alien_Y = aliens[i][j].getPositionY();
+                        float shooter_X = spaceShooter.getX();
+                        float shooter_Y = spaceShooter.getY();
+                        float difference_X = Math.abs(alien_X - shooter_X); //Difference X between alien and shooter
+                        float difference_Y = Math.abs(alien_Y - shooter_Y); //Difference Y between alien and shooter
+
+                        if(difference_X < 70  && difference_Y < 100)
+                        {
+
+                            spaceShooter.setVisibility(false);
+//                                Log.d(Name, "Collsiton detected" + countDeadAliens);
+
+                        }
+//                    Log.d(Name, "Y coordinate: " + aliens[i][j].getPositionY());
+//                    Log.d(Name, "HEIGHT: " + HEIGHT);
+                        if(aliens[i][j].getPositionY() >= HEIGHT - 100)
+                        {
+
+                            Log.d(Name, "Get lower in screen: " + countDeadAliens);
+                            countDeadAliens++;  //Increments the dead aliens + 1.
+
+                            aliens[i][j].setVisibility(false);
+
+
+                        }//EOF If aliens
+                    }
+                    //If the last alien was invisible. All the aliens will be visible
+
+                }
+            } //EOF For loops
+            //Looping through all the bullets in bulletList
+            for(int a=0; a < bulletList.size(); a++){
+
+                //changing y pos of bullet if bullet is released
+                if(bulletList.get(a).isBulletReleased()){
+                    bulletList.get(a).moveBullet();
+
+
+                    for (i = 0; i < row; ++i) {
+                        for (j = 0; j < column; ++j) {
+                            if(aliens[i][j].getVisibility() == true)
+                            {
+                                float bullet_X = bulletList.get(a).getX();
+                                float bullet_Y = bulletList.get(a).getY();
+                                float alien_X =  aliens[i][j].getPositionX();
+                                float alien_Y =aliens[i][j].getPositionY();
+
+                                float difference_X = Math.abs(alien_X - bullet_X);
+                                float difference_Y = Math.abs(alien_Y - bullet_Y);
+
+
+                                if(difference_X < 50  && difference_Y < 50){
+                                    //Set the collision detection rect
+
+//                                Log.d(Name, "Collsiton detected" + countDeadAliens);
+                                    aliens[i][j].setVisibility(false);
+                                    countDeadAliens++;
+                                }
+                            }
+
+                        }
+                    }
+
+
+                }
+                // else the bullet should follow the spaceShooter
+                else {
+                    bulletList.get(a).setX(spaceShooter.getX());
+                    bulletList.get(a).setY(spaceShooter.getY());
+
+
                 }
 
-                //If the last alien was invisible. All the aliens will be visible
-                if(aliens[i][j].getPositionY() >= HEIGHT + 100 )
-                {
+                //draw the bullet
+                bulletList.get(a).draw(c);
+                //remove the bullets that are out of the screen
+                if(bulletList.get(a).getY() < 0){
+                    bulletList.remove(a);
+                    a--;
+                } //fi
 
-                    aliens[i][j].setVisibility(false);
+            } //rof
+            //drawing mystery ship conditions
+            //rand will generate number from 0 to 49 so 50% chance will go in to if statement
+//        System.out.println("flag less than 20??" + mysteryshipflag);
+            mysteryShip.setDestroyed();
+            //System.out.println("new destroy?" + mysteryShip.Destroyed());
+            while (mysteryshipflag <= 3) {
+                //  System.out.println("what's mystershipflag number?" + mysteryshipflag);
 
-                    countDeadAliens++;
 
+                if (mysteryShip.Destroyed()) {
+//                mysteryShip.draw(c);
+                    //   System.out.println("pass through if destroy to be true");
 
+                    mysteryShip.moveShip();
 
+                }
 
+                mysteryShip.draw(c);
 
-                }//EOF If aliens
+//            System.out.println("x of mship" + mysteryShip.getX());
+//            System.out.println("y of mship" + mysteryShip.getY());
 
+                if (mysteryShip.getX() > c.getWidth()) {
+//                System.out.println("what's c.getWidth? suppose to be the max of screen" + c.getWidth());
+                    mysteryShip.setDDestroyed();
+                    mysteryshipflag = 4;
+                    //mysteryShip.setDestroyed();
+//                System.out.println("is ship remove? setDDestroyed" + mysteryShip.Destroyed());
 
+                } //fi
 
             }
+            mysteryShip.setX(10);
+            mysteryShip.setY(10);
 
 
-        } //EOF For loops
-
-
-
-
+        }   //EOF SpaceShooter visible
 
         //If all aliens are dead, do this.
 
@@ -250,103 +349,7 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
 
 
 
-        //if bullet is released, get a reload a new bullet
-        if(curr_bullet.isBulletReleased()){
-            Bullet bullet_tmp = new Bullet(spaceShooter.getX(), spaceShooter.getY());
 
-            //set that as current bullet
-            curr_bullet = bullet_tmp;
-            bulletList.add(curr_bullet);
-
-
-
-        }
-        //Looping through all the bullets in bulletList
-        for(int a=0; a < bulletList.size(); a++){
-
-            //changing y pos of bullet if bullet is released
-            if(bulletList.get(a).isBulletReleased()){
-                bulletList.get(a).moveBullet();
-
-
-                for (i = 0; i < row; ++i) {
-                    for (j = 0; j < column; ++j) {
-                        if(aliens[i][j].getVisibility() == true)
-                        {
-                            float bullet_X = bulletList.get(a).getX();
-                            float bullet_Y = bulletList.get(a).getY();
-                            float alien_X =  aliens[i][j].getPositionX();
-                            float alien_Y =aliens[i][j].getPositionY();
-
-                            float difference_X = Math.abs(alien_X - bullet_X);
-                            float difference_Y = Math.abs(alien_Y - bullet_Y);
-
-
-                            if(difference_X < 50  && difference_Y < 50){
-                                //Set the collision detection rect
-
-                                Log.d(Name, "Collsiton detected");
-                                aliens[i][j].setVisibility(false);
-                                countDeadAliens++;
-                            }
-                        }
-
-                    }
-                }
-
-
-            }
-            // else the bullet should follow the spaceShooter
-            else {
-                bulletList.get(a).setX(spaceShooter.getX());
-                bulletList.get(a).setY(spaceShooter.getY());
-
-
-            }
-
-            //draw the bullet
-            bulletList.get(a).draw(c);
-            //remove the bullets that are out of the screen
-            if(bulletList.get(a).getY() < 0){
-                bulletList.remove(a);
-                a--;
-            } //fi
-
-        } //rof
-        //drawing mystery ship conditions
-        //rand will generate number from 0 to 49 so 50% chance will go in to if statement
-        System.out.println("flag less than 20??" + mysteryshipflag);
-        mysteryShip.setDestroyed();
-       //System.out.println("new destroy?" + mysteryShip.Destroyed());
-        while (mysteryshipflag <= 3) {
-          //  System.out.println("what's mystershipflag number?" + mysteryshipflag);
-
-
-            if (mysteryShip.Destroyed()) {
-//                mysteryShip.draw(c);
-             //   System.out.println("pass through if destroy to be true");
-
-                mysteryShip.moveShip();
-
-            }
-
-            mysteryShip.draw(c);
-
-//            System.out.println("x of mship" + mysteryShip.getX());
-//            System.out.println("y of mship" + mysteryShip.getY());
-
-            if (mysteryShip.getX() > c.getWidth()) {
-                System.out.println("what's c.getWidth? suppose to be the max of screen" + c.getWidth());
-                mysteryShip.setDDestroyed();
-                mysteryshipflag = 4;
-                //mysteryShip.setDestroyed();
-//                System.out.println("is ship remove? setDDestroyed" + mysteryShip.Destroyed());
-
-            } //fi
-
-        }
-        mysteryShip.setX(10);
-        mysteryShip.setY(10);
 
 
     } //eof draw

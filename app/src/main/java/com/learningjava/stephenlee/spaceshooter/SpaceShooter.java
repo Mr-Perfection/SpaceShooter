@@ -17,6 +17,7 @@ public class SpaceShooter
     private int x;   // the X coordinate
     private int y;   // the Y coordinate
     private boolean touched; // if spaceshooter is touched/picked up
+    private boolean isVisible = true; //invisibility flag (when bullet hits the enemy, it becomes invisible)
 
     /*Set SpaceShooter (bitmap, x, y)*/
     public SpaceShooter(Bitmap _bitmap, int _width, int _height)
@@ -25,11 +26,22 @@ public class SpaceShooter
         width = _width;
         height = _height;
         x = _width / 2;
-        y = _height * 3/4;
+        y = _height * 6/7;
 
     }
 
 
+    public void setVisibility(boolean _isVisible)
+    {
+        isVisible = _isVisible; //set it to false when hit by bullet
+
+    }
+
+    public Boolean getVisibility()
+    {
+        return isVisible; //set it to false when hit by bullet
+
+    }
     //Get bitmap
     public Bitmap getBitmap()
     {
