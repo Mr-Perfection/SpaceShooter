@@ -179,6 +179,9 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
             if (spaceShooter.isTouched()) {
                 spaceShooter.setTouched(false);
                 // release the bullet
+//                curr_bullet.setBulletReleased();
+            }
+            if(event.getY() > 0){
                 curr_bullet.setBulletReleased();
             }
         }//EOF if UP
