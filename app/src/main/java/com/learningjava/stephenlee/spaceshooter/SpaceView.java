@@ -19,6 +19,7 @@ import android.view.SurfaceView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -55,8 +56,12 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
     private float velocityX, velocityY;
     //for mystery ship
     private MysteryShip mysteryShip;
+
+    private int counter = 0;
+    MysteryShip curr_ms;
+    ArrayList<MysteryShip> msList = new ArrayList<MysteryShip>();
     //to store the random number that was generated from rand
-    int mysteryshipflag;
+    //int mysteryshipflag;
     //to check if the mysteryship is out of the page(destroyed)
     //true: yes, destroyed
     //false: not destroyed
@@ -93,10 +98,10 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         curr_bullet = bullet_tmp;
         bulletList.add(curr_bullet);
         //initialize the first mysteryship and add to mysteryshipList
-//        MysteryShip mysteryShip_tmp = new MysteryShip(90, 100);
-//        curr_mysteryship = mysteryShip_tmp;
-//        mysteryShipsList.add(curr_mysteryship);
         mysteryShip = new MysteryShip(10,10);
+//        curr_ms = ms_tmp;
+//        msList.add(curr_ms);
+       // mysteryShip = new MysteryShip(10,10);
         /*CREATE ALIEN ARMY*/
         row = 4;
         column = 5;
@@ -301,46 +306,100 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
                 } //fi
 
             } //rof
+            //end of bullets
+
             //drawing mystery ship conditions
             //rand will generate number from 0 to 49 so 50% chance will go in to if statement
 //        System.out.println("flag less than 20??" + mysteryshipflag);
-            mysteryShip.setDestroyed();
+
+
+//                Random rand = new Random();
+//                int mysteryshipflag = rand.nextInt(50); //generate number from 0 to 49
+//                 System.out.println("what's the random generated number" +mysteryshipflag);
+//
+
+
             //System.out.println("new destroy?" + mysteryShip.Destroyed());
-            while (mysteryshipflag <= 3) {
-                //  System.out.println("what's mystershipflag number?" + mysteryshipflag);
-
-
-                if (mysteryShip.Destroyed()) {
-//                mysteryShip.draw(c);
-                    //   System.out.println("pass through if destroy to be true");
-
-                    mysteryShip.moveShip();
-
-                }
-
-                mysteryShip.draw(c);
-
-//            System.out.println("x of mship" + mysteryShip.getX());
-//            System.out.println("y of mship" + mysteryShip.getY());
-
-                if (mysteryShip.getX() > c.getWidth()) {
-//                System.out.println("what's c.getWidth? suppose to be the max of screen" + c.getWidth());
-                    mysteryShip.setDDestroyed();
-                    mysteryshipflag = 4;
-                    //mysteryShip.setDestroyed();
-//                System.out.println("is ship remove? setDDestroyed" + mysteryShip.Destroyed());
-
-                } //fi
-
-            }
-            mysteryShip.setX(10);
-            mysteryShip.setY(10);
-
+//           if(mysteryshipflag <= 4) {
+//
+//                //  System.out.println("what's mystershipflag number?" + mysteryshipflag);
+////               MysteryShip ms_tmp = new MysteryShip(10,10);
+////               curr_ms = ms_tmp;
+////               msList.add(curr_ms);
+//               mysteryShip.setDestroyed();
+//                   if(mysteryShip.Destroyed()){
+////                       for (int ms = 0; ms < 1; ms++) {
+////                mysteryShip.draw(c);
+//                           //   System.out.println("pass through if destroy to be true");
+//
+//                           mysteryShip.moveShip();
+//
+//                           mysteryShip.draw(c);
+//
+//
+//                           System.out.println("what's my x?" + mysteryShip.getX());
+//                           System.out.println("what's my y?" + mysteryShip.getY());
+//                           if (mysteryShip.getX() > c.getWidth()) {
+////                System.out.println("what's c.getWidth? suppose to be the max of screen" + c.getWidth());
+//                               mysteryShip.setDestroyed();
+//
+//                               mysteryshipflag = 5;
+//                               //mysteryShip.setDestroyed();
+////                System.out.println("is ship remove? setDDestroyed" + mysteryShip.Destroyed());
+//
+//                           } //fi
+//
+//                           System.out.println("should only have one blue ball?");
+//                       }
+////            System.out.println("x of mship" + mysteryShip.getX());
+////            System.out.println("y of mship" + mysteryShip.getY());
+//
+//            } //end if myflag<=3
+////            mysteryShip.setX(10);
+////            mysteryShip.setY(10);
 
         }   //EOF SpaceShooter visible
+System.out.println("counter =" +counter);
+        if(counter == 10) {
+            Random rand = new Random();
+            int mysteryshipflag = rand.nextInt(50); //generate number from 0 to 49
+            System.out.println("what's the random generated number" + mysteryshipflag);
+
+            if (mysteryshipflag < 20) {
+                System.out.println("pass mysteryflag");
+                if (mysteryShip.getisMoving()) {
+                } else {
+                    System.out.println("setismove is true");
+                    mysteryShip.setisMoving(true);
+
+                }
+            }
+            counter = 0;
+        }
+        counter ++;
+        //drawing ms ships
+        if(mysteryShip.getisMoving()){
+            mysteryShip.moveShip();
+            mysteryShip.draw(c);
+        }
+        if(mysteryShip.getX() >= c.getWidth()){
+            mysteryShip.setisMoving(false);
+            mysteryShip.setX(10);
+        }
+//        for(int ms = 0; ms < msList.size(); ms++){
+//            if(msList.get(ms).getisMoving()){
+//                msList.get(ms).moveShip();
+//                msList.get(ms).draw(c);
+//            }
+//            if(msList.get(ms).getX() > c.getWidth()){
+//                msList.remove(ms);
+//                ms--;
+//            }
+//        }
+
+
 
         //If all aliens are dead, do this.
-
         if(countDeadAliens == row * column)
         {
             velocityX = velocityX + 10;
