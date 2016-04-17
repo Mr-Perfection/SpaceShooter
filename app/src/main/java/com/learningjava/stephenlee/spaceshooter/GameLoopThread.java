@@ -51,11 +51,6 @@ public class GameLoopThread extends Thread {
             Canvas canvas = surfaceHolder.lockCanvas(null);
 
             try {
-//                System.out.println("iif(spaceView.isShipDestroyed == true){
-//                        Random rand = new Random();
-//                        spaceView.mysteryshipflag = rand.nextInt(50); //generate number from 0 to 49
-////                        System.out.println("what's the random generated number" +spaceView.mysteryshipflag);
-//                    }ntry");
                 synchronized (surfaceHolder) {
 //
                     spaceView.draw(canvas); //drawing frame

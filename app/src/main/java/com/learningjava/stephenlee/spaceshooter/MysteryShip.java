@@ -44,18 +44,6 @@ public class MysteryShip
     }
     public boolean getisMoving(){ return isMoving;}
     public void setisMoving(boolean _isMoving){isMoving = _isMoving;}
-    //isShipDestroyed and setShipDestroyed
-//    public int isShipDestroyed(){ return sd;}
-//    public void setShipDestroyed(int setsd) {
-//        sd = setsd;
-//    }
-    //mysteryship is destroyed
-    public boolean Destroyed(){ return dd;}
-    public void setDestroyed(){dd = true;}
-    public void setDDestroyed(){dd = false;}
-
-    //update mystery ships
-
 
     //drawing mystery ship
     public void draw(Canvas canvas) {
@@ -64,10 +52,7 @@ public class MysteryShip
         p.setColor(Color.BLUE);
 
         canvas.drawCircle(x_ms, y_ms, 10, p);
-//        System.out.println("x_ms: " + x_ms);
-//        System.out.println("y_ms: " +y_ms);
+
     } //eof draw
-
-
 
 }
