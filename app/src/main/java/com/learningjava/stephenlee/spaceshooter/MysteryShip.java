@@ -1,8 +1,10 @@
 package com.learningjava.stephenlee.spaceshooter;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 /**
  * Created by StephenLee on 4/12/16.
@@ -10,14 +12,15 @@ import android.graphics.Paint;
 public class MysteryShip
 {
     //fields
+    private Bitmap bitmap;
     private int x_ms;
     private int y_ms;
-    private boolean dd = false;
     private boolean isMoving = false;
 
-    //constructor: part of methods
-    public MysteryShip(int screenWidth, int screenHeight) {
 
+    //constructor: part of methods
+    public MysteryShip(Bitmap _bitmap,int screenWidth, int screenHeight) {
+        bitmap = _bitmap;
         x_ms = screenWidth;
         y_ms = screenHeight;
     }
@@ -28,8 +31,8 @@ public class MysteryShip
     public void moveShip() {
         x_ms = x_ms +50;
     }
-
-
+    public Bitmap getBitmap(){return bitmap;}
+    public void setBitmap(Bitmap _bitmap) {bitmap = _bitmap;}
     public int getX() {
         return x_ms;
     }
@@ -47,11 +50,11 @@ public class MysteryShip
 
     //drawing mystery ship
     public void draw(Canvas canvas) {
-//        System.out.println("drawing ms");
-        Paint p = new Paint();
-        p.setColor(Color.BLUE);
-
-        canvas.drawCircle(x_ms, y_ms, 10, p);
+//        Paint p = new Paint();
+//        p.setColor(Color.BLUE);
+//
+//        canvas.drawCircle(x_ms, y_ms, 10, p);
+        canvas.drawBitmap(bitmap,x_ms,y_ms, null);
 
     } //eof draw
 

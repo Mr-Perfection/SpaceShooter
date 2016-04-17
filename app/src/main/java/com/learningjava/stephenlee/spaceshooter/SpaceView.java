@@ -96,7 +96,8 @@ public class SpaceView extends SurfaceView implements SurfaceHolder.Callback
         curr_bullet = bullet_tmp;
         bulletList.add(curr_bullet);
         //initialize the first mysteryship and add to mysteryshipList
-        mysteryShip = new MysteryShip(10,10);
+        Bitmap mshipBitmap = BitmapFactory.decodeResource(getResources(),R.mipmap.mysteryship);
+        mysteryShip = new MysteryShip(mshipBitmap, 10,10);
 //        curr_ms = ms_tmp;
 //        msList.add(curr_ms);
        // mysteryShip = new MysteryShip(10,10);
